@@ -14,7 +14,10 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "api:dev": "cd apps/api && uvicorn app.main:app --reload --port 8000",
+    "api:test": "cd apps/api && pytest -q",
+    "api:check": "cd apps/api && ruff check . && mypy app && pytest -q"
   },
   "devDependencies": {
     "prettier": "^3.3.3",

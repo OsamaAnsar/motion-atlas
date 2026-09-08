@@ -19,17 +19,32 @@ Pika. Same core loop — prompt (or image) in, MP4 out — but the model runs
 stages, per-step progress, GPU telemetry, a real job queue, and full
 reproducible metadata for every render.
 
-> **Status:** Milestones 1–3 complete. The full frontend runs today in
-> **`DEMO_MODE`** with a simulated inference pipeline — no GPU or ComfyUI
-> required. Real ComfyUI + Wan 2.2 integration is Milestones 4–14
-> (see [`docs/architecture.md`](docs/architecture.md)).
+> **Status:** Milestones 1–16 built. The whole stack — web + FastAPI + job queue
+> + SQLite + GPU telemetry + WebSocket streaming — runs today in **`DEMO_MODE`**
+> with a simulated inference pipeline (no GPU or ComfyUI needed). The
+> `ComfyUIProvider` for real Wan 2.2 generation is coded against ComfyUI's API
+> and awaits live verification against an install (see
+> [`docs/comfyui-setup.md`](docs/comfyui-setup.md)).
 
 ## Demo
+
+**Frontend only** (in-browser simulation, nothing else to run):
 
 ```bash
 pnpm install
 pnpm --filter @motion-atlas/web dev
 # open http://localhost:3000  ·  DEMO_MODE is on by default
+```
+
+**Full stack in demo mode** (real API + queue + SQLite + WebSocket, still no GPU):
+
+```bash
+# terminal 1 — API
+cd apps/api && python -m venv .venv && . .venv/Scripts/activate   # bash: source .venv/bin/activate
+pip install -e ".[dev]" && uvicorn app.main:app --reload --port 8000
+
+# terminal 2 — web, pointed at the API
+NEXT_PUBLIC_DEMO_MODE=false pnpm --filter @motion-atlas/web dev
 ```
 
 Every screen works: submit a generation, watch it move through
@@ -208,15 +223,12 @@ NEXT_PUBLIC_DEMO_MODE=false pnpm --filter @motion-atlas/web dev
 | Phase | |
 | --- | --- |
 | 1–3 ✅ | Repo, Next.js UI, full `DEMO_MODE` |
-| 4–6 | FastAPI, asyncio queue, SQLite persistence |
-| 7–8 | GPU monitoring, ComfyUI health |
-| 9–11 | Workflow submission, WebSocket tracking, MP4 retrieval |
-| 12 | Image-to-video upload → ComfyUI |
-| 13–14 | Error handling matrix, rate limiting |
-| 15–16 | Architecture/system polish, README + demo GIF |
-| 4️⃣ (opt) | Rule-based prompt enhancer |
-| 5 (opt) | Visual presets (prompt helpers only) |
-| 7 | `VideoInferenceProvider` → remote GPU (RunPod / AWS / Lambda) |
+| 4–7 ✅ | FastAPI, asyncio queue, SQLite persistence, GPU monitoring |
+| 8–14 ✅ | ComfyUI provider (health, `/prompt`, `/ws`, MP4 retrieval), i2v upload, typed errors, rate limiting |
+| 15–16 ✅ | Architecture/system pages, README |
+| **Next** | Verify `ComfyUIProvider` against a live ComfyUI + Wan 2.2 install; export `comfy/workflows/*.json` |
+| Later | Rule-based prompt enhancer · visual presets · demo GIF |
+| Phase 7 | `RemoteComfyUIProvider` → remote GPU (RunPod / AWS / Lambda) via the existing `VideoInferenceProvider` seam |
 
 ## License
 

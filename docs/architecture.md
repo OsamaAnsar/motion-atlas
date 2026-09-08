@@ -165,16 +165,21 @@ For public portfolio deployments, prompt text storage can be disabled
 | 1 | Repository structure | ✅ |
 | 2 | Next.js UI | ✅ |
 | 3 | Demo generation (`DEMO_MODE`) | ✅ |
-| 4 | FastAPI | ▢ |
-| 5 | Generation queue | ▢ |
-| 6 | SQLite persistence | ▢ |
-| 7 | GPU monitoring | ▢ |
-| 8 | ComfyUI health integration | ▢ |
-| 9 | ComfyUI workflow submission | ▢ |
-| 10 | WebSocket execution tracking | ▢ |
-| 11 | Video output retrieval | ▢ |
-| 12 | Image-to-video upload | ▢ |
-| 13 | Error handling | ▢ |
-| 14 | Rate limiting | ▢ |
-| 15 | Architecture / system pages | ✅ (demo data) |
+| 4 | FastAPI | ✅ |
+| 5 | Generation queue (`asyncio`, 1 worker) | ✅ |
+| 6 | SQLite persistence (SQLModel) | ✅ |
+| 7 | GPU monitoring (`nvidia-smi`) | ✅ |
+| 8 | ComfyUI health integration | ✅ |
+| 9 | ComfyUI workflow submission | ✅ (needs live verification) |
+| 10 | WebSocket execution tracking | ✅ (needs live verification) |
+| 11 | Video output retrieval | ✅ (needs live verification) |
+| 12 | Image-to-video upload | ✅ (upload + templating; live verification) |
+| 13 | Error handling (typed, OOM-safe) | ✅ |
+| 14 | Rate limiting (opt-in per-IP/day) | ✅ |
+| 15 | Architecture / system pages | ✅ |
 | 16 | README & demo polish | ✅ |
+
+Milestones 9–12 are coded against ComfyUI's documented HTTP/WebSocket API but
+not yet exercised against a live ComfyUI + Wan 2.2 install — that's the Phase 2
+task in `docs/comfyui-setup.md`. Everything else runs and is covered by tests
+(`apps/api/tests/`) via the `DemoInferenceProvider`.
