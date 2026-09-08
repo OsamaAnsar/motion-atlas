@@ -39,3 +39,4 @@ storage/uploads/*
 *.log
 coverage/
 next-env.d.ts
+*.tsbuildinfo
