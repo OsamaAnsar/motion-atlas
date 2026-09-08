@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Motion Atlas — dark developer-tool theme.
+   Single committed look (dark). Charcoal surfaces, thin borders, mono metrics.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-background: #0a0a0b;
+  --color-surface: #101012;
+  --color-surface-2: #151518;
+  --color-surface-3: #1b1b1f;
+  --color-border: #232327;
+  --color-border-strong: #313138;
+  --color-foreground: #ededf0;
+  --color-muted: #8b8b93;
+  --color-muted-strong: #a7a7af;
+
+  --color-accent: #7c9cff;
+  --color-accent-strong: #98b0ff;
+  --color-accent-foreground: #0a0a0b;
+
+  --color-success: #3fb950;
+  --color-warning: #d8a531;
+  --color-danger: #f85149;
+
+  --font-sans:
+    var(--font-app-sans, ui-sans-serif), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:
+    var(--font-app-mono, ui-monospace), "SF Mono", "JetBrains Mono", "Fira Code", monospace;
+
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(60rem 40rem at 85% -10%, rgba(124, 156, 255, 0.06), transparent),
+      radial-gradient(50rem 40rem at -10% 0%, rgba(124, 156, 255, 0.04), transparent);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(124, 156, 255, 0.28);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 999px;
+    border: 2px solid var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f47;
+  }
+}
+
+@layer components {
+  .panel {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .panel-2 {
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .metric {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  .hairline {
+    border-color: var(--color-border);
+  }
+
+  .dot {
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 999px;
+    box-shadow: 0 0 0 3px currentColor;
+    opacity: 0.9;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .text-gradient {
+    background: linear-gradient(180deg, #ffffff 0%, #b9b9c4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(124, 156, 255, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(124, 156, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 156, 255, 0);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

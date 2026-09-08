@@ -1,0 +1,47 @@
+# Motion Atlas — local orchestration.
+#
+# ComfyUI is intentionally NOT in this file. It runs on the host (it needs
+# direct GPU access and its own model tree) at http://127.0.0.1:8188 and must
+# never be exposed publicly.
+#
+#   Demo mode:  `docker compose up web`         (no API / GPU needed)
+#   Full local: run ComfyUI on the host, then   `docker compose up`
+
+services:
+  api:
+    build:
+      context: ./apps/api
+    # GPU access for nvidia-smi + talking to host ComfyUI:
+    network_mode: host
+    environment:
+      APP_ENV: development
+      DEMO_MODE: "${DEMO_MODE:-true}"
+      COMFYUI_URL: "${COMFYUI_URL:-http://127.0.0.1:8188}"
+      DATABASE_URL: "sqlite:////data/motion_atlas.db"
+      MAX_GPU_WORKERS: "1"
+    volumes:
+      - ./storage:/data/storage
+      - ./comfy/workflows:/app/workflows:ro
+      - api-db:/data
+    # Uncomment on a machine with the NVIDIA Container Toolkit:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu, utility]
+
+  web:
+    build:
+      context: ./apps/web
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_DEMO_MODE: "${NEXT_PUBLIC_DEMO_MODE:-true}"
+      NEXT_PUBLIC_API_URL: "${NEXT_PUBLIC_API_URL:-http://127.0.0.1:8000}"
+    depends_on:
+      - api
+
+volumes:
+  api-db:

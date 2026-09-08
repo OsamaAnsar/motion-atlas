@@ -1,0 +1,41 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build output
+.next/
+out/
+dist/
+build/
+.turbo/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# databases
+*.db
+*.sqlite
+*.sqlite3
+
+# runtime storage (keep the folders, ignore the contents)
+storage/generations/*
+storage/uploads/*
+!storage/generations/.gitkeep
+!storage/uploads/.gitkeep
+
+# misc
+.DS_Store
+*.log
+coverage/
+next-env.d.ts

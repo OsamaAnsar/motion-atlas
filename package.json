@@ -1,0 +1,23 @@
+{
+  "name": "motion-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Self-hosted AI video generation platform — ComfyUI + Wan 2.2 TI2V 5B on a local RTX 3070.",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^2.5.4"
+  }
+}

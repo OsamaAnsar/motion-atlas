@@ -1,0 +1,10 @@
+packages:
+  - "apps/web"
+  - "packages/*"
+
+# Native post-install scripts are opt-in (pnpm >= 10). Neither is required:
+# - sharp: Next.js uses it for image optimization and falls back to a built-in decoder.
+# - unrs-resolver: used by eslint-import-resolver; lint still works without it.
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
