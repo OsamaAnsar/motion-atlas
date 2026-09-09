@@ -15,7 +15,7 @@ export const config = {
   demoMode: bool(process.env.NEXT_PUBLIC_DEMO_MODE, true),
   apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000",
   comfyuiUrl: process.env.NEXT_PUBLIC_COMFYUI_URL ?? "http://127.0.0.1:8188",
-  githubUrl: process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/your-name/motion-atlas",
+  githubUrl: process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/OsamaAnsar/motion-atlas",
   modelName: process.env.NEXT_PUBLIC_MODEL_NAME ?? "Wan 2.2 TI2V 5B",
   gpuName: process.env.NEXT_PUBLIC_GPU_NAME ?? "NVIDIA GeForce RTX 3070",
   hasDemoVideo: bool(process.env.NEXT_PUBLIC_HAS_DEMO_VIDEO, false),

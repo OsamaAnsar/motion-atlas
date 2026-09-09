@@ -119,6 +119,19 @@
   }
 }
 
+@keyframes motion-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* No fill-mode on purpose: the resting state is fully visible, so a stalled or
+   never-running animation clock can never leave content hidden. */
+.motion-fade-in {
+  animation: motion-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 0 0 0 rgba(124, 156, 255, 0.45);
