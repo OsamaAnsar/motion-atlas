@@ -153,10 +153,13 @@ class JobManager:
     def _validate(self, payload: GenerationCreate) -> None:
         s = payload.settings
         st = self._settings
-        if s.width > st.max_width or s.height > st.max_height:
+        # Orientation-agnostic: the long side must fit `max_width`, the short
+        # side `max_height`. Allows 832×480 and 480×832; rejects 720p (1280×720).
+        long_side, short_side = max(s.width, s.height), min(s.width, s.height)
+        if long_side > st.max_width or short_side > st.max_height:
             raise ValidationError(
                 f"Resolution {s.width}×{s.height} exceeds the RTX 3070 limit "
-                f"({st.max_width}×{st.max_height})."
+                f"({st.max_width}×{st.max_height}, either orientation)."
             )
         if s.width <= 0 or s.height <= 0 or s.width % 8 or s.height % 8:
             raise ValidationError("Width and height must be positive multiples of 8.")
@@ -241,6 +244,10 @@ class JobManager:
         await self._finalize_success(job_id, outcome, started)
 
     async def _await_vram_headroom(self, job_id: str) -> None:
+        # The simulated provider does no GPU work — don't gate it on real VRAM
+        # (which may be busy with something else on the box).
+        if self._provider.kind == "demo":
+            return
         threshold = self._settings.gpu_start_vram_threshold_mb
         for attempt in range(30):  # ~60s cap, then proceed anyway
             free = await self._gpu.free_vram_mb()

@@ -54,8 +54,11 @@ function validate(form: GenerationForm): string | null {
   if (form.prompt.trim().length < 3) return "Enter a prompt (at least a few words).";
   if (form.mode === "image-to-video" && !form.imageName)
     return "Upload an image for image-to-video, or switch to text-to-video.";
-  if (form.width > LIMITS.maxWidth || form.height > LIMITS.maxHeight)
-    return `Resolution exceeds the RTX 3070 limit (${LIMITS.maxWidth}×${LIMITS.maxHeight}).`;
+  if (
+    Math.max(form.width, form.height) > LIMITS.maxWidth ||
+    Math.min(form.width, form.height) > LIMITS.maxHeight
+  )
+    return `Resolution exceeds the RTX 3070 limit (${LIMITS.maxWidth}×${LIMITS.maxHeight}, either orientation).`;
   if (form.frames > LIMITS.maxFrames) return `Frame count exceeds the limit (${LIMITS.maxFrames}).`;
   if (form.frames < LIMITS.minFrames) return `Frame count too low (min ${LIMITS.minFrames}).`;
   if (form.steps > LIMITS.maxSteps || form.steps < LIMITS.minSteps)

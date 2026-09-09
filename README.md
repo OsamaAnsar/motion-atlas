@@ -19,12 +19,12 @@ Pika. Same core loop — prompt (or image) in, MP4 out — but the model runs
 stages, per-step progress, GPU telemetry, a real job queue, and full
 reproducible metadata for every render.
 
-> **Status:** Milestones 1–16 built. The whole stack — web + FastAPI + job queue
-> + SQLite + GPU telemetry + WebSocket streaming — runs today in **`DEMO_MODE`**
-> with a simulated inference pipeline (no GPU or ComfyUI needed). The
-> `ComfyUIProvider` for real Wan 2.2 generation is coded against ComfyUI's API
-> and awaits live verification against an install (see
-> [`docs/comfyui-setup.md`](docs/comfyui-setup.md)).
+> **Status:** Milestones 1–16 complete. The full path — browser → FastAPI → job
+> queue → ComfyUI → **Wan 2.2 TI2V 5B** → **RTX 3070** → MP4 → browser — has been
+> run end-to-end on an RTX 3070 Laptop (8 GB): a 640×384 / 49-frame / 30-step
+> clip in ~4m20s, peak VRAM 7.4 GB (setup + timings in
+> [`docs/comfyui-setup.md`](docs/comfyui-setup.md)). `DEMO_MODE` still runs the
+> entire stack — queue, WebSocket progress, GPU telemetry — with **no GPU**.
 
 ## Demo
 
@@ -224,10 +224,9 @@ NEXT_PUBLIC_DEMO_MODE=false pnpm --filter @motion-atlas/web dev
 | --- | --- |
 | 1–3 ✅ | Repo, Next.js UI, full `DEMO_MODE` |
 | 4–7 ✅ | FastAPI, asyncio queue, SQLite persistence, GPU monitoring |
-| 8–14 ✅ | ComfyUI provider (health, `/prompt`, `/ws`, MP4 retrieval), i2v upload, typed errors, rate limiting |
+| 8–14 ✅ | ComfyUI provider (health, `/prompt`, `/ws`, MP4 retrieval) — **verified live on an RTX 3070**; i2v upload + graph, typed errors, rate limiting |
 | 15–16 ✅ | Architecture/system pages, README |
-| **Next** | Verify `ComfyUIProvider` against a live ComfyUI + Wan 2.2 install; export `comfy/workflows/*.json` |
-| Later | Rule-based prompt enhancer · visual presets · demo GIF |
+| **Next** | Live i2v run · OOM-tuning presets for 8 GB · demo GIF · prompt enhancer |
 | Phase 7 | `RemoteComfyUIProvider` → remote GPU (RunPod / AWS / Lambda) via the existing `VideoInferenceProvider` seam |
 
 ## License

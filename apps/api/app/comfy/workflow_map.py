@@ -83,14 +83,25 @@ def _set_input(graph: Graph, node_id: str | None, key: str, value: Any) -> None:
         graph[node_id].setdefault("inputs", {})[key] = value
 
 
+def _set_input_if_present(graph: Graph, node_id: str | None, key: str, value: Any) -> None:
+    """Only overwrite a key the node already declares — avoids injecting an
+    input the node doesn't accept (e.g. `noise_seed` onto a plain KSampler)."""
+    if node_id and node_id in graph and key in graph[node_id].get("inputs", {}):
+        graph[node_id]["inputs"][key] = value
+
+
+_FPS_TYPES = {"CreateVideo": "fps", "VHS_VideoCombine": "frame_rate", "SaveAnimatedWEBP": "fps"}
+
+
 def apply_common(graph: Graph, row: Generation, *, positive: str, negative: str) -> None:
     pos_id, neg_id = _positive_negative(graph)
     _set_input(graph, pos_id, "text", positive)
     _set_input(graph, neg_id, "text", negative)
 
     sampler = _find_sampler(graph)
-    _set_input(graph, sampler, "seed", row.seed)
-    _set_input(graph, sampler, "noise_seed", row.seed)
+    # KSampler uses `seed`; KSamplerAdvanced/SamplerCustom use `noise_seed`.
+    _set_input_if_present(graph, sampler, "seed", row.seed)
+    _set_input_if_present(graph, sampler, "noise_seed", row.seed)
     _set_input(graph, sampler, "steps", row.steps)
     _set_input(graph, sampler, "cfg", row.guidance)
 
@@ -99,6 +110,11 @@ def apply_common(graph: Graph, row: Generation, *, positive: str, negative: str)
         _set_input(graph, latent_id, "height", row.height)
         _set_input(graph, latent_id, "length", row.frames)
         _set_input(graph, latent_id, "batch_size", 1)
+
+    for node_id, node in graph.items():
+        key = _FPS_TYPES.get(node.get("class_type", ""))
+        if key:
+            _set_input(graph, node_id, key, row.fps)
 
 
 def build_t2v(template: Graph, row: Generation, *, positive: str, negative: str) -> Graph:

@@ -170,16 +170,17 @@ For public portfolio deployments, prompt text storage can be disabled
 | 6 | SQLite persistence (SQLModel) | ✅ |
 | 7 | GPU monitoring (`nvidia-smi`) | ✅ |
 | 8 | ComfyUI health integration | ✅ |
-| 9 | ComfyUI workflow submission | ✅ (needs live verification) |
-| 10 | WebSocket execution tracking | ✅ (needs live verification) |
-| 11 | Video output retrieval | ✅ (needs live verification) |
-| 12 | Image-to-video upload | ✅ (upload + templating; live verification) |
+| 9 | ComfyUI workflow submission | ✅ verified live |
+| 10 | WebSocket execution tracking | ✅ verified live |
+| 11 | Video output retrieval | ✅ verified live |
+| 12 | Image-to-video upload | ✅ (upload + templating; i2v graph ready) |
 | 13 | Error handling (typed, OOM-safe) | ✅ |
 | 14 | Rate limiting (opt-in per-IP/day) | ✅ |
 | 15 | Architecture / system pages | ✅ |
 | 16 | README & demo polish | ✅ |
 
-Milestones 9–12 are coded against ComfyUI's documented HTTP/WebSocket API but
-not yet exercised against a live ComfyUI + Wan 2.2 install — that's the Phase 2
-task in `docs/comfyui-setup.md`. Everything else runs and is covered by tests
-(`apps/api/tests/`) via the `DemoInferenceProvider`.
+The full path — browser → FastAPI → `ComfyUIProvider` → ComfyUI → Wan 2.2 TI2V
+5B → RTX 3070 → MP4 → browser — has been run end-to-end on an RTX 3070 Laptop
+(8 GB). Setup + measured timings: `docs/comfyui-setup.md`. Demo mode
+(`DemoInferenceProvider`) still runs the whole stack with no GPU and is what
+`apps/api/tests/` exercise.
