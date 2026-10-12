@@ -6,6 +6,7 @@ the browser's `Date.now()`).
 from __future__ import annotations
 
 from enum import Enum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
@@ -172,3 +173,75 @@ def empty_timeline() -> list[TimelineEntry]:
         TimelineEntry(status=s, label=STAGE_LABELS[s], at=None)
         for s in STAGE_ORDER
     ]
+
+
+# ── prompt enhancer (rule-based, not an LLM) ────────────────────────────────
+
+
+class PromptStyle(str, Enum):
+    cinematic = "cinematic"
+    documentary = "documentary"
+    anime = "anime"
+    product_shot = "product-shot"
+    none = "none"
+
+
+class CameraMove(str, Enum):
+    static = "static"
+    slow_push_in = "slow-push-in"
+    pan = "pan"
+    tracking = "tracking"
+    aerial = "aerial"
+    handheld = "handheld"
+    orbit = "orbit"
+
+
+class LightingPreset(str, Enum):
+    natural = "natural"
+    golden_hour = "golden-hour"
+    studio = "studio"
+    neon = "neon"
+    dramatic = "dramatic"
+
+
+class SegmentCategory(str, Enum):
+    style = "style"
+    camera = "camera"
+    lighting = "lighting"
+    continuity = "continuity"
+
+
+class SkipReason(str, Enum):
+    already_specified = "already_specified"
+    too_long = "too_long"
+
+
+class PromptEnhanceRequest(CamelModel):
+    # Length / blank checks live in the router so errors use the API's
+    # `{error, detail}` shape.
+    prompt: str
+    mode: GenerationMode = GenerationMode.text_to_video
+    # Omitted: cinematic for text-to-video, nothing for image-to-video.
+    style: PromptStyle | None = None
+    camera: CameraMove | None = None
+    lighting: LightingPreset | None = None
+
+
+class EnhancedSegment(CamelModel):
+    category: SegmentCategory
+    preset: str
+    text: str
+
+
+class SkippedSegment(CamelModel):
+    category: SegmentCategory
+    reason: SkipReason
+
+
+class PromptEnhanceResponse(CamelModel):
+    original: str
+    enhanced: str
+    segments: list[EnhancedSegment]
+    skipped: list[SkippedSegment]
+    method: Literal["rules"] = "rules"
+    max_chars: int

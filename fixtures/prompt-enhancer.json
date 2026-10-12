@@ -1,0 +1,828 @@
+{
+  "maxChars": 600,
+  "cases": [
+    {
+      "name": "default cinematic t2v",
+      "input": {
+        "prompt": "A red fox walks through snow"
+      },
+      "expected": {
+        "original": "A red fox walks through snow",
+        "enhanced": "A red fox walks through snow, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "whitespace collapsed",
+      "input": {
+        "prompt": "  A red   fox\n\twalks  through snow  "
+      },
+      "expected": {
+        "original": "A red fox walks through snow",
+        "enhanced": "A red fox walks through snow, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "trailing period uses space separator",
+      "input": {
+        "prompt": "A red fox walks through snow."
+      },
+      "expected": {
+        "original": "A red fox walks through snow.",
+        "enhanced": "A red fox walks through snow. cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "trailing comma uses space separator",
+      "input": {
+        "prompt": "A red fox walks through snow,"
+      },
+      "expected": {
+        "original": "A red fox walks through snow,",
+        "enhanced": "A red fox walks through snow, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "trailing question mark",
+      "input": {
+        "prompt": "Who left the lights on?"
+      },
+      "expected": {
+        "original": "Who left the lights on?",
+        "enhanced": "Who left the lights on? cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "style documentary",
+      "input": {
+        "prompt": "A fisherman mends a net",
+        "style": "documentary"
+      },
+      "expected": {
+        "original": "A fisherman mends a net",
+        "enhanced": "A fisherman mends a net, documentary style, natural realism",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "documentary",
+            "text": "documentary style, natural realism"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "style anime",
+      "input": {
+        "prompt": "A girl runs along a train platform",
+        "style": "anime"
+      },
+      "expected": {
+        "original": "A girl runs along a train platform",
+        "enhanced": "A girl runs along a train platform, anime style, cel shading, vibrant colors",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "anime",
+            "text": "anime style, cel shading, vibrant colors"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "style product-shot",
+      "input": {
+        "prompt": "A ceramic mug on a table",
+        "style": "product-shot"
+      },
+      "expected": {
+        "original": "A ceramic mug on a table",
+        "enhanced": "A ceramic mug on a table, studio product shot, clean seamless backdrop",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "product-shot",
+            "text": "studio product shot, clean seamless backdrop"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "style none adds nothing",
+      "input": {
+        "prompt": "A paper boat on a pond",
+        "style": "none"
+      },
+      "expected": {
+        "original": "A paper boat on a pond",
+        "enhanced": "A paper boat on a pond",
+        "segments": [],
+        "skipped": []
+      }
+    },
+    {
+      "name": "style none with camera only",
+      "input": {
+        "prompt": "A paper boat on a pond",
+        "style": "none",
+        "camera": "orbit"
+      },
+      "expected": {
+        "original": "A paper boat on a pond",
+        "enhanced": "A paper boat on a pond, slow orbit around the subject",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "orbit",
+            "text": "slow orbit around the subject"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera static",
+      "input": {
+        "prompt": "A cat on a windowsill",
+        "style": "none",
+        "camera": "static"
+      },
+      "expected": {
+        "original": "A cat on a windowsill",
+        "enhanced": "A cat on a windowsill, static camera",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "static",
+            "text": "static camera"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera slow-push-in",
+      "input": {
+        "prompt": "A cat on a windowsill",
+        "style": "none",
+        "camera": "slow-push-in"
+      },
+      "expected": {
+        "original": "A cat on a windowsill",
+        "enhanced": "A cat on a windowsill, slow push-in",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "slow-push-in",
+            "text": "slow push-in"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera pan",
+      "input": {
+        "prompt": "A cat on a windowsill",
+        "style": "none",
+        "camera": "pan"
+      },
+      "expected": {
+        "original": "A cat on a windowsill",
+        "enhanced": "A cat on a windowsill, smooth pan",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "pan",
+            "text": "smooth pan"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera tracking",
+      "input": {
+        "prompt": "A cat on a windowsill",
+        "style": "none",
+        "camera": "tracking"
+      },
+      "expected": {
+        "original": "A cat on a windowsill",
+        "enhanced": "A cat on a windowsill, tracking shot",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "tracking",
+            "text": "tracking shot"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera aerial",
+      "input": {
+        "prompt": "A cat on a windowsill",
+        "style": "none",
+        "camera": "aerial"
+      },
+      "expected": {
+        "original": "A cat on a windowsill",
+        "enhanced": "A cat on a windowsill, aerial drone shot",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "aerial",
+            "text": "aerial drone shot"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera handheld",
+      "input": {
+        "prompt": "A cat on a windowsill",
+        "style": "none",
+        "camera": "handheld"
+      },
+      "expected": {
+        "original": "A cat on a windowsill",
+        "enhanced": "A cat on a windowsill, handheld camera",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "handheld",
+            "text": "handheld camera"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "lighting natural",
+      "input": {
+        "prompt": "A violin on a chair",
+        "style": "none",
+        "lighting": "natural"
+      },
+      "expected": {
+        "original": "A violin on a chair",
+        "enhanced": "A violin on a chair, soft natural light",
+        "segments": [
+          {
+            "category": "lighting",
+            "preset": "natural",
+            "text": "soft natural light"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "lighting golden-hour",
+      "input": {
+        "prompt": "A violin on a chair",
+        "style": "none",
+        "lighting": "golden-hour"
+      },
+      "expected": {
+        "original": "A violin on a chair",
+        "enhanced": "A violin on a chair, golden hour light",
+        "segments": [
+          {
+            "category": "lighting",
+            "preset": "golden-hour",
+            "text": "golden hour light"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "lighting studio",
+      "input": {
+        "prompt": "A violin on a chair",
+        "style": "none",
+        "lighting": "studio"
+      },
+      "expected": {
+        "original": "A violin on a chair",
+        "enhanced": "A violin on a chair, soft studio lighting",
+        "segments": [
+          {
+            "category": "lighting",
+            "preset": "studio",
+            "text": "soft studio lighting"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "lighting neon",
+      "input": {
+        "prompt": "A violin on a chair",
+        "style": "none",
+        "lighting": "neon"
+      },
+      "expected": {
+        "original": "A violin on a chair",
+        "enhanced": "A violin on a chair, neon-lit night lighting",
+        "segments": [
+          {
+            "category": "lighting",
+            "preset": "neon",
+            "text": "neon-lit night lighting"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "lighting dramatic",
+      "input": {
+        "prompt": "A violin on a chair",
+        "style": "none",
+        "lighting": "dramatic"
+      },
+      "expected": {
+        "original": "A violin on a chair",
+        "enhanced": "A violin on a chair, dramatic low-key lighting",
+        "segments": [
+          {
+            "category": "lighting",
+            "preset": "dramatic",
+            "text": "dramatic low-key lighting"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "all categories",
+      "input": {
+        "prompt": "A lighthouse on a cliff",
+        "style": "cinematic",
+        "camera": "aerial",
+        "lighting": "golden-hour"
+      },
+      "expected": {
+        "original": "A lighthouse on a cliff",
+        "enhanced": "A lighthouse on a cliff, cinematic, 35mm film look, shallow depth of field, aerial drone shot, golden hour light",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          },
+          {
+            "category": "camera",
+            "preset": "aerial",
+            "text": "aerial drone shot"
+          },
+          {
+            "category": "lighting",
+            "preset": "golden-hour",
+            "text": "golden hour light"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "camera already specified",
+      "input": {
+        "prompt": "A slow dolly shot past a lighthouse",
+        "camera": "pan"
+      },
+      "expected": {
+        "original": "A slow dolly shot past a lighthouse",
+        "enhanced": "A slow dolly shot past a lighthouse, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": [
+          {
+            "category": "camera",
+            "reason": "already_specified"
+          }
+        ]
+      }
+    },
+    {
+      "name": "lighting already specified",
+      "input": {
+        "prompt": "A lighthouse at sunset",
+        "lighting": "neon"
+      },
+      "expected": {
+        "original": "A lighthouse at sunset",
+        "enhanced": "A lighthouse at sunset, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": [
+          {
+            "category": "lighting",
+            "reason": "already_specified"
+          }
+        ]
+      }
+    },
+    {
+      "name": "style already specified",
+      "input": {
+        "prompt": "An anime hero on a rooftop",
+        "style": "cinematic"
+      },
+      "expected": {
+        "original": "An anime hero on a rooftop",
+        "enhanced": "An anime hero on a rooftop",
+        "segments": [],
+        "skipped": [
+          {
+            "category": "style",
+            "reason": "already_specified"
+          }
+        ]
+      }
+    },
+    {
+      "name": "all already specified",
+      "input": {
+        "prompt": "Cinematic drone footage of a lighthouse at sunset",
+        "style": "documentary",
+        "camera": "tracking",
+        "lighting": "dramatic"
+      },
+      "expected": {
+        "original": "Cinematic drone footage of a lighthouse at sunset",
+        "enhanced": "Cinematic drone footage of a lighthouse at sunset",
+        "segments": [],
+        "skipped": [
+          {
+            "category": "style",
+            "reason": "already_specified"
+          },
+          {
+            "category": "camera",
+            "reason": "already_specified"
+          },
+          {
+            "category": "lighting",
+            "reason": "already_specified"
+          }
+        ]
+      }
+    },
+    {
+      "name": "keyword needs word boundary",
+      "input": {
+        "prompt": "A panda eating bamboo",
+        "camera": "pan"
+      },
+      "expected": {
+        "original": "A panda eating bamboo",
+        "enhanced": "A panda eating bamboo, cinematic, 35mm film look, shallow depth of field, smooth pan",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          },
+          {
+            "category": "camera",
+            "preset": "pan",
+            "text": "smooth pan"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "i2v default adds only continuity",
+      "input": {
+        "prompt": "The woman turns toward the camera",
+        "mode": "image-to-video"
+      },
+      "expected": {
+        "original": "The woman turns toward the camera",
+        "enhanced": "The woman turns toward the camera, consistent with the first frame",
+        "segments": [
+          {
+            "category": "continuity",
+            "preset": "first-frame",
+            "text": "consistent with the first frame"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "i2v explicit style",
+      "input": {
+        "prompt": "The dog shakes off water",
+        "mode": "image-to-video",
+        "style": "documentary",
+        "camera": "handheld"
+      },
+      "expected": {
+        "original": "The dog shakes off water",
+        "enhanced": "The dog shakes off water, documentary style, natural realism, handheld camera, consistent with the first frame",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "documentary",
+            "text": "documentary style, natural realism"
+          },
+          {
+            "category": "camera",
+            "preset": "handheld",
+            "text": "handheld camera"
+          },
+          {
+            "category": "continuity",
+            "preset": "first-frame",
+            "text": "consistent with the first frame"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "i2v continuity already specified",
+      "input": {
+        "prompt": "Keep the first frame composition while leaves drift",
+        "mode": "image-to-video"
+      },
+      "expected": {
+        "original": "Keep the first frame composition while leaves drift",
+        "enhanced": "Keep the first frame composition while leaves drift",
+        "segments": [],
+        "skipped": [
+          {
+            "category": "continuity",
+            "reason": "already_specified"
+          }
+        ]
+      }
+    },
+    {
+      "name": "i2v style none",
+      "input": {
+        "prompt": "Clouds move over the hills",
+        "mode": "image-to-video",
+        "style": "none"
+      },
+      "expected": {
+        "original": "Clouds move over the hills",
+        "enhanced": "Clouds move over the hills, consistent with the first frame",
+        "segments": [
+          {
+            "category": "continuity",
+            "preset": "first-frame",
+            "text": "consistent with the first frame"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "unicode and emoji count as one char each",
+      "input": {
+        "prompt": "Un chat gris 🐈 sur un toit à Paris"
+      },
+      "expected": {
+        "original": "Un chat gris 🐈 sur un toit à Paris",
+        "enhanced": "Un chat gris 🐈 sur un toit à Paris, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "subject stays verbatim incl case and punctuation",
+      "input": {
+        "prompt": "WALL-E sweeps (slowly) across the Lahore skyline; mid-day"
+      },
+      "expected": {
+        "original": "WALL-E sweeps (slowly) across the Lahore skyline; mid-day",
+        "enhanced": "WALL-E sweeps (slowly) across the Lahore skyline; mid-day, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    },
+    {
+      "name": "already enhanced output is a fixed point",
+      "input": {
+        "prompt": "A red fox walks through snow, cinematic, 35mm film look, shallow depth of field",
+        "camera": "tracking",
+        "lighting": "natural"
+      },
+      "expected": {
+        "original": "A red fox walks through snow, cinematic, 35mm film look, shallow depth of field",
+        "enhanced": "A red fox walks through snow, cinematic, 35mm film look, shallow depth of field, tracking shot, soft natural light",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "tracking",
+            "text": "tracking shot"
+          },
+          {
+            "category": "lighting",
+            "preset": "natural",
+            "text": "soft natural light"
+          }
+        ],
+        "skipped": [
+          {
+            "category": "style",
+            "reason": "already_specified"
+          }
+        ]
+      }
+    },
+    {
+      "name": "enhanced length may land exactly on the cap",
+      "input": {
+        "prompt": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+        "camera": "orbit",
+        "lighting": "studio"
+      },
+      "expected": {
+        "original": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+        "enhanced": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": [
+          {
+            "category": "camera",
+            "reason": "too_long"
+          },
+          {
+            "category": "lighting",
+            "reason": "too_long"
+          }
+        ]
+      }
+    },
+    {
+      "name": "prompt at the cap is untouched",
+      "input": {
+        "prompt": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        "camera": "pan",
+        "lighting": "natural"
+      },
+      "expected": {
+        "original": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        "enhanced": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        "segments": [],
+        "skipped": [
+          {
+            "category": "style",
+            "reason": "too_long"
+          },
+          {
+            "category": "camera",
+            "reason": "too_long"
+          },
+          {
+            "category": "lighting",
+            "reason": "too_long"
+          }
+        ]
+      }
+    },
+    {
+      "name": "prompt over the cap is never truncated",
+      "input": {
+        "prompt": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
+        "camera": "pan"
+      },
+      "expected": {
+        "original": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
+        "enhanced": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
+        "segments": [],
+        "skipped": [
+          {
+            "category": "style",
+            "reason": "too_long"
+          },
+          {
+            "category": "camera",
+            "reason": "too_long"
+          }
+        ]
+      }
+    },
+    {
+      "name": "greedy fit keeps a shorter later segment",
+      "input": {
+        "prompt": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx end",
+        "camera": "static"
+      },
+      "expected": {
+        "original": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx end",
+        "enhanced": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx end, static camera",
+        "segments": [
+          {
+            "category": "camera",
+            "preset": "static",
+            "text": "static camera"
+          }
+        ],
+        "skipped": [
+          {
+            "category": "style",
+            "reason": "too_long"
+          }
+        ]
+      }
+    },
+    {
+      "name": "length is counted in code points not UTF-16 units",
+      "input": {
+        "prompt": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+      },
+      "expected": {
+        "original": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        "enhanced": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀, cinematic, 35mm film look, shallow depth of field",
+        "segments": [
+          {
+            "category": "style",
+            "preset": "cinematic",
+            "text": "cinematic, 35mm film look, shallow depth of field"
+          }
+        ],
+        "skipped": []
+      }
+    }
+  ]
+}

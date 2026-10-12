@@ -24,7 +24,7 @@ from .db import init_db
 from .errors import install_error_handlers
 from .logging import configure_logging, get_logger
 from .providers import ComfyUIProvider, DemoInferenceProvider
-from .routers import generations, gpu, health, uploads
+from .routers import generations, gpu, health, prompts, uploads
 from .services import storage
 from .services.events import EventBus
 from .services.gpu import GpuService
@@ -117,6 +117,7 @@ async def rate_limit(request: Request, call_next):
 app.include_router(health.router, prefix="/api")
 app.include_router(gpu.router, prefix="/api")
 app.include_router(uploads.router, prefix="/api")
+app.include_router(prompts.router, prefix="/api")
 app.include_router(generations.router, prefix="/api")
 
 

@@ -19,6 +19,10 @@ implemented.**
   turns a job `failed` without killing the worker.
 - **Uploads** — MIME + magic-byte + size validation, UUID names, retention sweep.
 - **Rate limiting** — optional per-IP daily cap (`ENABLE_RATE_LIMIT`).
+- **Prompt enhancer** — `POST /api/prompts/enhance`: deterministic, **rule-based
+  (not an LLM)**. Appends style / camera / lighting descriptors without
+  duplicating what the prompt already says; see
+  [`docs/prompt-enhancer.md`](../../docs/prompt-enhancer.md).
 
 ## Run
 
@@ -61,12 +65,13 @@ app/
     gpu.py           nvidia-smi telemetry
     events.py        per-job pub/sub for the WebSocket
     storage.py       uploads + generated-video files
+    prompt_enhancer.py  rule-based prompt enhancer (pure, deterministic)
   providers/
     base.py          VideoInferenceProvider (Phase 7 remote-GPU seam)
     demo.py          server-side simulation
     comfyui.py       ComfyUI + Wan 2.2
   comfy/workflow_map.py   node-id-free workflow templating
-  routers/           health · gpu · uploads · generations (REST + WS)
+  routers/           health · gpu · uploads · prompts · generations (REST + WS)
 tests/               health, demo end-to-end, queue, cancel, delete, WS stream
 ```
 
@@ -85,3 +90,4 @@ tests/               health, demo end-to-end, queue, cancel, delete, WS stream
 | WS     | `/api/generations/{job_id}/events`  |
 | POST   | `/api/uploads`                        |
 | GET    | `/api/uploads/{name}`                |
+| POST   | `/api/prompts/enhance`               |
