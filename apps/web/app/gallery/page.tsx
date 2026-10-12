@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { GalleryView } from "@/components/gallery/gallery-view";
 
@@ -8,5 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function GalleryPage() {
-  return <GalleryView />;
+  // GalleryView reads its filters from the query string (needs a Suspense boundary).
+  return (
+    <Suspense fallback={null}>
+      <GalleryView />
+    </Suspense>
+  );
 }
