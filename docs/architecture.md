@@ -54,7 +54,7 @@ nvidia-smi → GPU service → GET /api/gpu  ·  and pushed as `gpu_metrics` eve
 
 | Component            | Tech                                   | Responsibility                                                                 |
 | ------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
-| **Web**             | Next.js (App Router), TS, Tailwind, shadcn/ui, Framer Motion, Zustand | UI, generation form, live progress, GPU dashboard, gallery, architecture/system pages. |
+| **Web**             | Next.js (App Router), TS, Tailwind, shadcn/ui, Framer Motion, Zustand, Vitest | UI, generation form, live progress, GPU dashboard, gallery, architecture/system pages. |
 | **API**             | FastAPI, Pydantic, asyncio, HTTPX      | The only thing allowed to talk to ComfyUI. Validation, queue, persistence, telemetry, streaming. |
 | **Job Queue**       | `asyncio.Queue` + 1 worker            | Guarantees a single concurrent generation. Extra jobs wait FIFO.             |
 | **ComfyUI service** | HTTPX + websockets client              | Health, `POST /prompt`, `/ws` tracking, `/history`, output resolution, `/interrupt`. |
@@ -76,20 +76,43 @@ interface GenerationProvider {
   listGenerations(): Promise<GenerationJob[]>;
   cancelGeneration(jobId): Promise<void>;
   deleteGeneration(jobId): Promise<void>;
+  uploadImage(file): Promise<{ name; previewUrl }>;
+  enhancePrompt(req): Promise<PromptEnhanceResult>;   // rule-based, not an LLM
   subscribe(jobId, onEvent): () => void;   // WebSocket-shaped event stream
 }
 ```
 
 | Implementation  | Phase | Notes                                                                    |
 | --------------- | ----- | ---------------------------------------------------------------------- |
-| `MockProvider`  | 1     | Runs entirely in the browser. Simulates queue, stages, per-step progress, GPU curves, timeline, and a synthetic clip. |
-| `ApiProvider`   | 4+    | Same interface over `fetch` + `WebSocket` to FastAPI.                   |
+| `MockProvider`  | 1     | Runs entirely in the browser. Simulates queue, stages, per-step progress, GPU curves, timeline, and a synthetic clip. Prompt enhancement runs the TypeScript port of the rules. |
+| `ApiProvider`   | 4+    | Same interface over `fetch` + `WebSocket` to FastAPI. Responses from `POST /api/prompts/enhance` are shape-checked before use. |
 
 Selected by `NEXT_PUBLIC_DEMO_MODE` in `apps/web/lib/provider/factory.ts`.
 
 The backend mirrors this seam with `VideoInferenceProvider` (Phase 7) so
 inference can move to a remote GPU (RunPod / AWS / Lambda) without touching the
 web app.
+
+### Prompt enhancement
+
+`POST /api/prompts/enhance` is a pure, deterministic text transform in
+`apps/api/app/services/prompt_enhancer.py`: it never touches the queue, the GPU
+or the database, and it is **not** a language model. The web `MockProvider` runs
+a TypeScript port (`apps/web/lib/prompt/enhance.ts`) so demo mode needs no
+network. Both implementations are tested against one shared file,
+`fixtures/prompt-enhancer.json`, so they cannot drift apart silently. Rules,
+presets and caveats: [`prompt-enhancer.md`](prompt-enhancer.md).
+
+### Remix, gallery filters, recent prompts (web only)
+
+- **Remix** hands settings to `/generate` through a query string
+  (`lib/remix.ts`), validated against the same choices and limits as the
+  controls. No server state, so it works identically for both providers.
+- **Gallery search/filter/sort** (`lib/gallery-filters.ts`) runs client-side over
+  the list the provider returns (the API caps it at the 60 most recent) and
+  mirrors its state in the URL query string.
+- **Recent prompts** live in `localStorage` behind a guarded helper
+  (`lib/safe-storage.ts`) and are never sent to the API.
 
 ---
 

@@ -63,6 +63,10 @@ synthetic clip).
 | **FIFO job queue** | `MAX_GPU_WORKERS=1`. One generation on the GPU at a time; the rest wait with a visible queue position. |
 | **RTX 3070 safety rails** | Resolution / frame / step ceilings enforced client- and server-side. CUDA OOM is caught and surfaced, never fatal. |
 | **Reproducible metadata** | Seed, model, resolved params, timings, peak VRAM, `prompt_id` — persisted per run. |
+| **Prompt enhancer (rule-based)** | An **Enhance** button next to the prompt: fixed text rules (not an LLM) append style / camera / lighting descriptors. Your subject stays first and verbatim, nothing you already wrote is duplicated, the result is idempotent and capped at a heuristic 600 characters. Before/after preview with Accept and Undo. Runs in-browser in demo mode, via `POST /api/prompts/enhance` against the API. [Details](docs/prompt-enhancer.md) |
+| **Remix** | **Remix** (new seed) and **Remix, same seed** on every gallery card and detail page open the generator pre-filled with that run's prompt, negative prompt, resolution, frames, fps, steps and guidance. Values are validated against the controls' own limits; anything rejected or adjusted is listed. Image-to-video asks you to upload the source image again. |
+| **Gallery search & filters** | Search prompts, filter by status and mode, sort by newest / oldest / longest video. State lives in the URL so views are linkable. |
+| **Recent prompts** | A dropdown of the last 10 distinct prompts submitted from this browser (kept in `localStorage` only; silently skipped if storage is unavailable). |
 | **Architecture & System pages** | A live pipeline diagram that lights up the active path, plus local diagnostics mirroring `scripts/check-system.mjs`. |
 
 ## Architecture
@@ -100,7 +104,8 @@ motion-atlas/
   storage/
     uploads/      input images (UUID names)
     generations/  rendered MP4 + metadata.json
-  docs/           architecture.md · comfyui-setup.md
+  docs/           architecture.md · comfyui-setup.md · prompt-enhancer.md
+  fixtures/       prompt-enhancer.json  (shared by the Python and TypeScript tests)
   scripts/        check-system.mjs · make-demo-video.mjs
   docker-compose.yml · .env.example
 ```
@@ -217,6 +222,9 @@ NEXT_PUBLIC_DEMO_MODE=false pnpm --filter @motion-atlas/web dev
 - No 720p on the 3070 deployment.
 - Single GPU, single worker — throughput is one video at a time by design.
 - Cancellation of an in-flight ComfyUI step is best-effort.
+- The prompt enhancer is a fixed rule set, not a language model, and has not been
+  evaluated against output quality. Its 600-character cap is a conservative
+  heuristic, not a measured text-encoder limit.
 
 ## Roadmap
 
@@ -226,7 +234,8 @@ NEXT_PUBLIC_DEMO_MODE=false pnpm --filter @motion-atlas/web dev
 | 4–7 ✅ | FastAPI, asyncio queue, SQLite persistence, GPU monitoring |
 | 8–14 ✅ | ComfyUI provider (health, `/prompt`, `/ws`, MP4 retrieval) — **verified live on an RTX 3070**; i2v upload + graph, typed errors, rate limiting |
 | 15–16 ✅ | Architecture/system pages, README |
-| **Next** | Live i2v run · OOM-tuning presets for 8 GB · demo GIF · prompt enhancer |
+| 17 ✅ | Rule-based prompt enhancer · remix · gallery search/filters · recent prompts |
+| **Next** | Live i2v run · OOM-tuning presets for 8 GB · demo GIF |
 | Phase 7 | `RemoteComfyUIProvider` → remote GPU (RunPod / AWS / Lambda) via the existing `VideoInferenceProvider` seam |
 
 ## License
