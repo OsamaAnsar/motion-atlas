@@ -1,15 +1,22 @@
 "use client";
 
+import { Suspense } from "react";
+
 import { useBootstrap } from "@/hooks/use-bootstrap";
 import { Container, Eyebrow } from "@/components/primitives";
 import { GeneratorControls } from "./generator-controls";
 import { GenerationPanel } from "./generation-panel";
+import { RemixApplier } from "./remix-applier";
 
 export function GenerateWorkspace() {
   useBootstrap();
 
   return (
     <Container className="py-8">
+      {/* useSearchParams needs a Suspense boundary for static prerendering */}
+      <Suspense fallback={null}>
+        <RemixApplier />
+      </Suspense>
       <div className="mb-6">
         <Eyebrow>Generator</Eyebrow>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">Create a video</h1>

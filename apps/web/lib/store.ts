@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { DEFAULTS, FPS_OPTIONS, LIMITS } from "@/lib/config";
 import { getProvider } from "@/lib/provider/factory";
 import { randomSeed } from "@/lib/provider/mock/synthetic";
+import type { RemixParseResult } from "@/lib/remix";
 import {
   type GenerationJob,
   type GenerationMode,
@@ -92,6 +93,14 @@ interface StoreState {
   setResolution: (width: number, height: number) => void;
   resetForm: () => void;
 
+  /** Set while the form holds remixed settings the user has not dismissed. */
+  remixNotice: Pick<RemixParseResult, "seedMode" | "needsImage" | "warnings"> & {
+    seed: number | null;
+  } | null;
+  /** Replace the form with validated remix values (image fields are cleared). */
+  applyRemix: (remix: RemixParseResult) => void;
+  dismissRemixNotice: () => void;
+
   health: HealthStatus | null;
   gpu: GpuMetrics | null;
   gpuHistory: GpuSample[];
@@ -119,7 +128,28 @@ export const useStore = create<StoreState>((set, get) => ({
   form: INITIAL_FORM,
   setForm: (patch) => set((s) => ({ form: { ...s.form, ...patch }, formError: null })),
   setResolution: (width, height) => set((s) => ({ form: { ...s.form, width, height } })),
-  resetForm: () => set({ form: INITIAL_FORM, formError: null }),
+  resetForm: () => set({ form: INITIAL_FORM, formError: null, remixNotice: null }),
+
+  remixNotice: null,
+  applyRemix: (remix) =>
+    set({
+      form: {
+        ...INITIAL_FORM,
+        ...remix.values,
+        // The source image is never carried over; image-to-video asks for a re-upload.
+        imageName: null,
+        imageDataUrl: null,
+        imageFileName: null,
+      },
+      formError: null,
+      remixNotice: {
+        seedMode: remix.seedMode,
+        seed: remix.values.seed,
+        needsImage: remix.needsImage,
+        warnings: remix.warnings,
+      },
+    }),
+  dismissRemixNotice: () => set({ remixNotice: null }),
 
   health: null,
   gpu: null,
@@ -176,7 +206,7 @@ export const useStore = create<StoreState>((set, get) => ({
       const request = toRequest(form);
       const { jobId } = await provider.createGeneration(request);
       const job = await provider.getGeneration(jobId);
-      set((s) => ({ jobs: { ...s.jobs, [jobId]: job }, activeJobId: jobId }));
+      set((s) => ({ jobs: { ...s.jobs, [jobId]: job }, activeJobId: jobId, remixNotice: null }));
       get().watch(jobId);
       void get().loadHistory();
       return jobId;

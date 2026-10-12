@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Download, Trash2 } from "lucide-react";
+import { ArrowLeft, Download, Shuffle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { config } from "@/lib/config";
@@ -15,6 +15,7 @@ import {
   stageLabel,
 } from "@/lib/format";
 import { getProvider } from "@/lib/provider/factory";
+import { remixHref } from "@/lib/remix";
 import { useStore } from "@/lib/store";
 import { type GenerationJob, isTerminal } from "@/lib/types";
 import { Container, Eyebrow, KeyValue } from "@/components/primitives";
@@ -100,7 +101,27 @@ export function GenerationDetail({ id }: { id: string }) {
             {modeLabel(job.mode)} · {formatRelativeDate(job.completedAt ?? job.createdAt)}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="secondary"
+            asChild
+            title="Open the generator with these settings and a new seed"
+          >
+            <Link href={remixHref(job, "new")}>
+              <Shuffle /> Remix
+            </Link>
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            asChild
+            title="Open the generator with these settings and the same seed"
+          >
+            <Link href={remixHref(job, "same")}>
+              <Shuffle /> Remix, same seed
+            </Link>
+          </Button>
           {done && job.outputUrl && (
             <Button size="sm" variant="secondary" asChild>
               <a href={job.outputUrl} download={`motion-atlas-${s.seed}.mp4`}>

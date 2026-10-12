@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { config } from "@/lib/config";
 import { stageHint, stageLabel } from "@/lib/format";
+import { remixFromJob } from "@/lib/remix";
 import { useStore } from "@/lib/store";
 import { type GenerationJob, isTerminal } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -23,7 +24,7 @@ export function StageView({
 }) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const [recording, setRecording] = React.useState(false);
-  const setForm = useStore((s) => s.setForm);
+  const applyRemix = useStore((s) => s.applyRemix);
   const resetActive = useStore((s) => s.setActive);
 
   const aspect = job ? job.settings.width / job.settings.height : 16 / 9;
@@ -149,18 +150,7 @@ export function StageView({
           disabled={!job}
           onClick={() => {
             if (!job) return;
-            setForm({
-              mode: job.mode,
-              prompt: job.prompt,
-              negativePrompt: job.negativePrompt,
-              width: job.settings.width,
-              height: job.settings.height,
-              frames: job.settings.frames,
-              fps: job.settings.fps,
-              steps: job.settings.steps,
-              guidance: job.settings.guidance,
-              seed: null,
-            });
+            applyRemix(remixFromJob(job, "new"));
             resetActive(null);
             toast.success("Settings loaded into the form");
           }}

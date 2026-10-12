@@ -12,6 +12,7 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "@/components/generate/image-upload";
 import { PromptEnhancer } from "@/components/generate/prompt-enhancer";
+import { RemixNotice } from "@/components/generate/remix-notice";
 import {
   Collapsible,
   CollapsibleContent,
@@ -57,6 +58,8 @@ export function GeneratorControls({ onSubmitted }: { onSubmitted?: (jobId: strin
 
   return (
     <div className="flex flex-col gap-5">
+      <RemixNotice />
+
       {/* Mode */}
       <Field label="Mode">
         <Segmented

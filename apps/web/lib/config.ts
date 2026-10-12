@@ -32,6 +32,8 @@ export const LIMITS = {
   maxSteps: 40,
   minSteps: 10,
   maxQueueSize: 5,
+  /** Mirrors `GenerationCreate.prompt` max_length on the API. */
+  maxPromptChars: 2000,
   maxUploadMb: 10,
   gpuStartVramThresholdMb: 2000,
   vramTotalMb: 8192,
