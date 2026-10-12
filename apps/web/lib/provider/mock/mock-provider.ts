@@ -15,11 +15,14 @@ import {
   type GenerationStage,
   type GpuMetrics,
   type HealthStatus,
+  type PromptEnhanceRequest,
+  type PromptEnhanceResult,
   type TimelineEntry,
   GENERATION_STAGES,
   isTerminal,
 } from "@/lib/types";
 import { stageLabel } from "@/lib/format";
+import { MAX_PROMPT_INPUT_CHARS, enhancePrompt } from "@/lib/prompt/enhance";
 import type {
   CreateGenerationResult,
   GenerationProvider,
@@ -209,6 +212,14 @@ class MockProvider implements GenerationProvider {
     });
     const ext = file.name.split(".").pop()?.toLowerCase() ?? "png";
     return { name: `upload_${Math.random().toString(36).slice(2, 10)}.${ext}`, previewUrl };
+  }
+
+  async enhancePrompt(request: PromptEnhanceRequest): Promise<PromptEnhanceResult> {
+    // Same input ceiling the API enforces on this endpoint.
+    if (Array.from(request.prompt).length > MAX_PROMPT_INPUT_CHARS) {
+      throw new Error(`Prompt is longer than ${MAX_PROMPT_INPUT_CHARS} characters.`);
+    }
+    return enhancePrompt(request);
   }
 
   // ── events ─────────────────────────────────────────────────────────────────

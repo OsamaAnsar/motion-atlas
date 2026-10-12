@@ -16,6 +16,7 @@ MODES = ["text-to-video", "image-to-video"]
 STYLES = [None, "none", *pe.STYLE_PRESETS]
 CAMERAS = [None, *pe.CAMERA_MOVES]
 LIGHTINGS = [None, *pe.LIGHTING_PRESETS]
+WHITESPACE_MIX = chr(10) + chr(9) + " " + chr(0xA0)  # newline, tab, space, no-break space
 
 
 def _kwargs(inp: dict) -> dict:
@@ -188,7 +189,7 @@ async def test_endpoint_image_to_video(client) -> None:
     assert [s["category"] for s in r.json()["segments"]] == ["continuity"]
 
 
-@pytest.mark.parametrize("prompt", ["", "   ", "\n\t  "])
+@pytest.mark.parametrize("prompt", ["", "   ", WHITESPACE_MIX])
 async def test_endpoint_rejects_blank_prompt(client, prompt: str) -> None:
     r = await client.post("/api/prompts/enhance", json={"prompt": prompt})
     assert r.status_code == 422

@@ -5,6 +5,8 @@ import type {
   GenerationStatus,
   GpuMetrics,
   HealthStatus,
+  PromptEnhanceRequest,
+  PromptEnhanceResult,
 } from "@/lib/types";
 
 export interface CreateGenerationResult {
@@ -41,6 +43,13 @@ export interface GenerationProvider {
   deleteGeneration(jobId: string): Promise<void>;
 
   uploadImage(file: File): Promise<UploadResult>;
+
+  /**
+   * Rule-based prompt enhancement (deterministic text rules, not an LLM).
+   * `MockProvider` runs the shared TypeScript port; `ApiProvider` calls
+   * `POST /api/prompts/enhance`. Rejects on a blank prompt.
+   */
+  enhancePrompt(request: PromptEnhanceRequest): Promise<PromptEnhanceResult>;
 
   /**
    * Subscribe to the event stream for one job. Returns an unsubscribe fn.

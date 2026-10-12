@@ -145,3 +145,50 @@ export type GenerationEvent =
   | { type: "gpu_metrics"; jobId: string; metrics: GpuMetrics }
   | { type: "completed"; jobId: string; job: GenerationJob }
   | { type: "failed"; jobId: string; error: string };
+
+// ── prompt enhancer (rule-based, not an LLM) ────────────────────────────────
+
+export type PromptStyle = "cinematic" | "documentary" | "anime" | "product-shot" | "none";
+export type CameraMove =
+  | "static"
+  | "slow-push-in"
+  | "pan"
+  | "tracking"
+  | "aerial"
+  | "handheld"
+  | "orbit";
+export type LightingPreset = "natural" | "golden-hour" | "studio" | "neon" | "dramatic";
+export type SegmentCategory = "style" | "camera" | "lighting" | "continuity";
+export type SkipReason = "already_specified" | "too_long";
+
+export interface PromptEnhanceRequest {
+  prompt: string;
+  mode?: GenerationMode;
+  /** Omitted: cinematic for text-to-video, nothing for image-to-video. */
+  style?: PromptStyle;
+  camera?: CameraMove;
+  lighting?: LightingPreset;
+}
+
+export interface EnhancedSegment {
+  category: SegmentCategory;
+  preset: string;
+  text: string;
+}
+
+export interface SkippedSegment {
+  category: SegmentCategory;
+  reason: SkipReason;
+}
+
+export interface PromptEnhanceResult {
+  /** The prompt with whitespace normalised (otherwise untouched). */
+  original: string;
+  enhanced: string;
+  segments: EnhancedSegment[];
+  skipped: SkippedSegment[];
+  /** Always "rules": deterministic text rules, not a language model. */
+  method: "rules";
+  /** Heuristic length cap in characters (not a measured encoder limit). */
+  maxChars: number;
+}

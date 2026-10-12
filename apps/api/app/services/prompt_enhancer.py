@@ -34,7 +34,7 @@ from dataclasses import dataclass
 MAX_PROMPT_CHARS = 600
 
 # Characters treated as whitespace. Spelled out so Python and JS agree exactly.
-_WS = re.compile(r"[ \t\n\r\f\v   ]+")
+_WS = re.compile(r"[ \t\n\r\f\v\u00a0\u2028\u2029]+")
 
 # re.ASCII keeps \b and \w ASCII-only, matching JavaScript's behaviour.
 _FLAGS = re.IGNORECASE | re.ASCII

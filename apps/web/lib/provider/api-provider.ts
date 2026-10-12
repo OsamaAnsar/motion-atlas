@@ -14,7 +14,10 @@ import type {
   GenerationRequest,
   GpuMetrics,
   HealthStatus,
+  PromptEnhanceRequest,
+  PromptEnhanceResult,
 } from "@/lib/types";
+import { parsePromptEnhanceResult } from "@/lib/prompt/parse";
 import type {
   CreateGenerationResult,
   GenerationProvider,
@@ -32,8 +35,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) {
     let detail = `${res.status} ${res.statusText}`;
     try {
-      const body = (await res.json()) as { detail?: string; error?: string };
-      if (body.detail) detail = body.detail;
+      const body = (await res.json()) as { detail?: unknown; error?: string };
+      // FastAPI's own validation errors carry a list here; ours carry a string.
+      if (typeof body.detail === "string" && body.detail) detail = body.detail;
     } catch {
       /* non-JSON error body */
     }
@@ -123,6 +127,15 @@ export class ApiProvider implements GenerationProvider {
       body: form,
     });
     return { name, previewUrl: URL.createObjectURL(file) };
+  }
+
+  async enhancePrompt(req: PromptEnhanceRequest): Promise<PromptEnhanceResult> {
+    const raw = await request<unknown>("/api/prompts/enhance", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(req),
+    });
+    return parsePromptEnhanceResult(raw);
   }
 
   subscribe(jobId: string, onEvent: (event: GenerationEvent) => void): () => void {

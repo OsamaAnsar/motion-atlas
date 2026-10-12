@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   web:
-    name: web (typecheck · lint · build)
+    name: web (typecheck · lint · test · build)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -36,6 +36,9 @@ jobs:
         working-directory: .
 
       - run: pnpm --filter @motion-atlas/web lint
+        working-directory: .
+
+      - run: pnpm --filter @motion-atlas/web test
         working-directory: .
 
       - run: pnpm --filter @motion-atlas/web build
