@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { DEFAULTS, FPS_OPTIONS, LIMITS } from "@/lib/config";
 import { getProvider } from "@/lib/provider/factory";
 import { randomSeed } from "@/lib/provider/mock/synthetic";
+import { loadRecentPrompts, recordRecentPrompt } from "@/lib/recent-prompts";
 import type { RemixParseResult } from "@/lib/remix";
 import {
   type GenerationJob,
@@ -101,6 +102,10 @@ interface StoreState {
   applyRemix: (remix: RemixParseResult) => void;
   dismissRemixNotice: () => void;
 
+  /** Last distinct prompts submitted from this browser (newest first). */
+  recentPrompts: string[];
+  loadRecentPrompts: () => void;
+
   health: HealthStatus | null;
   gpu: GpuMetrics | null;
   gpuHistory: GpuSample[];
@@ -150,6 +155,9 @@ export const useStore = create<StoreState>((set, get) => ({
       },
     }),
   dismissRemixNotice: () => set({ remixNotice: null }),
+
+  recentPrompts: [],
+  loadRecentPrompts: () => set({ recentPrompts: loadRecentPrompts() }),
 
   health: null,
   gpu: null,
@@ -209,6 +217,7 @@ export const useStore = create<StoreState>((set, get) => ({
       set((s) => ({ jobs: { ...s.jobs, [jobId]: job }, activeJobId: jobId, remixNotice: null }));
       get().watch(jobId);
       void get().loadHistory();
+      set({ recentPrompts: recordRecentPrompt(form.prompt) });
       return jobId;
     } catch (err) {
       set({ formError: err instanceof Error ? err.message : "Could not start generation." });

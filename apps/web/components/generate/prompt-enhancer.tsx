@@ -6,6 +6,7 @@ import { Check, Loader2, Undo2, WandSparkles, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { RecentPrompts } from "@/components/generate/recent-prompts";
 import {
   Select,
   SelectContent,
@@ -13,7 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CAMERA_OPTIONS, LIGHTING_OPTIONS, STYLE_OPTIONS, normalizeWhitespace } from "@/lib/prompt/enhance";
+import {
+  CAMERA_OPTIONS,
+  LIGHTING_OPTIONS,
+  STYLE_OPTIONS,
+  normalizeWhitespace,
+} from "@/lib/prompt/enhance";
 import { getProvider } from "@/lib/provider/factory";
 import { useStore } from "@/lib/store";
 import type {
@@ -140,6 +146,9 @@ export function PromptEnhancer() {
             <Undo2 className="size-3" /> Enhanced. Undo
           </button>
         )}
+        <div className="ml-auto">
+          <RecentPrompts />
+        </div>
       </div>
 
       {open && (

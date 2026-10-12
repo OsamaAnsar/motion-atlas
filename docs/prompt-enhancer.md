@@ -117,6 +117,14 @@ blank prompt, a prompt over 2000 characters (the same ceiling as
 `POST /api/generations`), or an unknown preset id (FastAPI's standard validation
 body for that last one).
 
+## Recent prompts
+
+Separate from the enhancer: the generator keeps the last 10 distinct prompts you
+submitted in this browser and offers them in a **Recent prompts** dropdown under
+the prompt field. They are stored in `localStorage` only (key
+`motion-atlas:recent-prompts:v1`), are never sent to the API, and the feature
+quietly does nothing when storage is unavailable.
+
 ## Where the code lives
 
 - Python (authoritative for the API): `apps/api/app/services/prompt_enhancer.py`
