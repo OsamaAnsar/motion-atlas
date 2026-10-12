@@ -5,7 +5,7 @@
   "description": "Self-hosted AI video generation platform — ComfyUI + Wan 2.2 TI2V 5B on a local RTX 3070.",
   "packageManager": "pnpm@11.25.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13"
   },
   "scripts": {
     "dev": "turbo run dev",
